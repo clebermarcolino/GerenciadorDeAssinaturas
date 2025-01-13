@@ -19,7 +19,9 @@ class UI:
             [5] -> Pagar assinatura
             [6] -> Sair
             ''')
+
             choice = int(input('Escolha uma opção: '))
+
             if choice == 1:
                 self.add_subscription()
             elif choice == 2:
@@ -44,7 +46,6 @@ class UI:
     def delete_subscription(self):
         subscriptions = self.subscription_service.list_all()
         print('Escolha qual assinatura deseja excluir')
-
 
         for i in subscriptions:
             print(f'[{i.id}] -> {i.empresa}')

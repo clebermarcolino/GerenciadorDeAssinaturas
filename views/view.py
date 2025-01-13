@@ -22,18 +22,19 @@ class SubscriptionService:
     
     def delete_payments(self, id):
         with Session(self.engine) as session:
-            statement = select(Payments).where(Payments.subscription_id == id)
-            results = session.exec(statement).all()
-            for payment in results:
-                session.delete(payment)
+            statement = select(Payments).where(Payments.subscription_id == id) # seleciona todos os pagamentos onde a coluna subscription_id é igual ao id recebido.
+            results = session.exec(statement).all() # executa a consulta e pega todos os resultados.
 
-            session.commit()
+            for payment in results:
+                session.delete(payment) # adiciona o resultado à sessão, preparando uma query para deletar essa linha da tabela.
+
+            session.commit() # executa todas as queries de deleção, efetivando as mudanças no banco de dados.
 
     def delete(self, id):
         with Session(self.engine) as session:
             self.delete_payments(id)
             statement = select(Subscription).where(Subscription.id == id)
-            result = session.exec(statement).one()
+            result = session.exec(statement).one() # executa a consulta e espera que um, e somente um, resultado seja encontrado.
             session.delete(result)
             session.commit()
     
@@ -41,6 +42,7 @@ class SubscriptionService:
             for result in results:
                 if result.date.month == date.today().month:
                     return True
+                
                 return False
 
     def pay(self, subscription: Subscription):
@@ -49,11 +51,8 @@ class SubscriptionService:
             results = session.exec(statement).all()
             
             if self._has_pay(results):
-                question = input('Essa conta já foi paga esse mês. deseja pagar novamente ? Y ou N: ')
-
-
-                if not question.upper() == 'Y':
-                    return
+                print('Essa assinatura já foi paga esse mês. Não é possível pagar a mesma assinatura mais de uma vez.')
+                return
 
             pay = Payments(subscription_id=subscription.id, date=date.today())
             session.add(pay)
@@ -65,6 +64,7 @@ class SubscriptionService:
             results = session.exec(statement).all()
 
         total = 0
+
         for result in results:
             total += result.valor
 
@@ -75,13 +75,15 @@ class SubscriptionService:
         year = today.year
         month = today.month
         last_12_month = []
+
         for i in range(12):
             last_12_month.append((month, year))
             month -= 1
             if month == 0:
                 month = 12
                 year -= 1
-        return last_12_month[::-1]
+
+        return last_12_month[::-1] # Retorna uma lista de tuplas [(mes, ano), (mes, ano) ...] com os 12 últimos meses, ordenados do mais antigo para o mais atual.
 
     def _get_values_for_months(self, last_12_months):
         with Session(self.engine) as session:
@@ -89,18 +91,21 @@ class SubscriptionService:
             results = session.exec(statement).all()
 
             value_for_months = []
+
             for i in last_12_months:
                 value = 0
                 for result in results:
                     if result.date.month == i[0] and result.date.year == i[1]:
                         value += float(result.subscription.valor)
                 value_for_months.append(value)
+
             return value_for_months
 
     def gen_chart(self):
         last_12_months = self._get_last_12_months_native()
         values_for_months = self._get_values_for_months(last_12_months)
         last_12_months2 = []
+
         for i in last_12_months:
             last_12_months2.append(i[0])
             print(last_12_months2)
