@@ -1,6 +1,7 @@
 venv/
 __picache__/
 
+# Arquivos de log
 *.log
 
 database.database
