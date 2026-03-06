@@ -67,4 +67,3 @@ O sistema permite:
 ## Detalhes Adicionais
 
 *   A classe `SubscriptionService` encapsula a lógica de negócios do sistema.
-*   O banco de dados é armazenado em um arquivo chamado `database.db`.
