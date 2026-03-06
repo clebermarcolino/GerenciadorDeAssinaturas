@@ -51,6 +51,7 @@ O sistema permite:
 
     ```bash
     pip install sqlmodel matplotlib
+    pip install pyqt5
     ```
 
 4.  **Execute o script principal:**
@@ -61,7 +62,7 @@ O sistema permite:
 
 ## Como Usar
 
-1.  Execute o arquivo `main.py` para inicializar o banco de dados (criar tabelas).
+1.  Execute na pasta raiz do projeto `python3 templates/app.py` .
 2. Importe e utilize o `SubscriptionService` na sua aplicação para realizar as operações de criação, listagem, exclusão e pagamento de assinaturas.
 
 ## Detalhes Adicionais
